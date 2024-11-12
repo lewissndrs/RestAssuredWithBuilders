@@ -3,7 +3,6 @@ package reqres;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import org.apache.http.client.methods.RequestBuilder;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import reqres.builders.UserDirector;
@@ -52,7 +51,6 @@ public class UsersTest {
                 .statusCode(200);
     }
 
-//    TODO Create a clean test for register user
     @Test
     public void testRegisterUserClean(){
         RequestSpecification requestBody = UserDirector.specWithUserPayload();

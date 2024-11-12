@@ -33,3 +33,7 @@ public class UserDirector {
         return requestBuilder.build();
     }
 }
+
+//TODO: set up a way to pass parameters through from test code
+//TODO: Make specWithUserPayLoad have a better name so it's more clear and also take parameters.
+//TODO: Maybe abstract some of these out to a parent class so that once more models are introduced they can just be used.
