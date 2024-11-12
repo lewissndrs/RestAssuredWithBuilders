@@ -1,13 +1,13 @@
 package reqres;
 
-import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.client.methods.RequestBuilder;
-import org.junit.jupiter.api.BeforeAll;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import reqres.builders.UserDirector;
+
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
@@ -29,7 +29,6 @@ public class UsersTest {
 
     @Test
     public void testRegisterUserVerbose(){
-
         RequestSpecBuilder requestBuilder = new RequestSpecBuilder();
         requestBuilder.setAccept(ContentType.JSON);
         requestBuilder.setContentType(ContentType.JSON);
@@ -54,4 +53,18 @@ public class UsersTest {
     }
 
 //    TODO Create a clean test for register user
+    @Test
+    public void testRegisterUserClean(){
+        RequestSpecification requestBody = UserDirector.specWithUserPayload();
+        given()
+                .when()
+                .spec(requestBody)
+                .log()
+                .body()
+                .post("/register")
+                .then()
+                .log()
+                .body()
+                .statusCode(200);
+    }
 }
