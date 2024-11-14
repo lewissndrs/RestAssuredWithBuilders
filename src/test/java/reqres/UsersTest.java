@@ -9,6 +9,8 @@ import org.testng.annotations.Test;
 import reqres.directors.UserDirector;
 import reqres.models.UsersResponse;
 
+import java.util.HashMap;
+
 import static io.restassured.RestAssured.*;
 
 public class UsersTest {
@@ -64,7 +66,11 @@ public class UsersTest {
 
     @Test
     public void testRegisterUserClean(){
-        RequestSpecification requestBody = UserDirector.buildRegisterRequestSpec();
+//        set up only the data necessary, if none is needed the overwritevalues arg can be skipped.
+        HashMap<String,String> overwriteValues = new HashMap<String,String>();
+        overwriteValues.put("email","eve.holt@reqres.in");
+
+        RequestSpecification requestBody = UserDirector.buildRegisterRequestSpec(overwriteValues);
         given()
                 .when()
                 .spec(requestBody)
