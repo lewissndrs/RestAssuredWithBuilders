@@ -1,17 +1,18 @@
 package reqres.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 //Data autogenerates getters, setters etc. for the POJO. Look how tiny this is now!
 @Data
 //Builder makes this conform to the builder pattern
 @Builder
-//Below is used to strip any null fields
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@Jacksonized
 public class User {
-    String username;
+    Integer id;
+    String first_name;
+    String last_name;
     String email;
-    String password;
+    String avatar;
 }

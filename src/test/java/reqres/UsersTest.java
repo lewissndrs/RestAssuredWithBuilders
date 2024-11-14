@@ -3,12 +3,13 @@ package reqres;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import reqres.builders.UserDirector;
+import reqres.directors.UserDirector;
+import reqres.models.UsersResponse;
 
 import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
 
 public class UsersTest {
 
@@ -24,6 +25,16 @@ public class UsersTest {
                 .get("/users")
                 .then()
                 .assertThat().statusCode(200);
+    }
+
+    @Test
+    public void testGetUsersDeserialised() {
+        UsersResponse response =
+        given()
+                .when()
+                .get("/users")
+                .as(UsersResponse.class);
+        Assert.assertEquals(6, response.getData().size());
     }
 
     @Test
@@ -53,7 +64,7 @@ public class UsersTest {
 
     @Test
     public void testRegisterUserClean(){
-        RequestSpecification requestBody = UserDirector.specWithUserPayload();
+        RequestSpecification requestBody = UserDirector.buildRegisterRequestSpec();
         given()
                 .when()
                 .spec(requestBody)
@@ -65,4 +76,6 @@ public class UsersTest {
                 .body()
                 .statusCode(200);
     }
+
+
 }
