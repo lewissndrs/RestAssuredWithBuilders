@@ -70,6 +70,7 @@ public class UsersTest {
         HashMap<String,String> overwriteValues = new HashMap<String,String>();
         overwriteValues.put("email","eve.holt@reqres.in");
 
+//        boilerplate like setting contentType is abstracted to the Director class
         RequestSpecification requestBody = UserDirector.buildRegisterRequestSpec(overwriteValues);
         given()
                 .when()
