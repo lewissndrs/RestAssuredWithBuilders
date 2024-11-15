@@ -4,7 +4,6 @@ import io.restassured.specification.RequestSpecification;
 import reqres.models.Register;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class UserDirector extends Director{
 
@@ -30,5 +29,3 @@ public class UserDirector extends Director{
 
 
 }
-
-//TODO: set up a way to pass parameters through from test code

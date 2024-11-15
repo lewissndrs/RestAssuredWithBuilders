@@ -84,5 +84,4 @@ public class UsersTest {
                 .statusCode(200);
     }
 
-
 }
