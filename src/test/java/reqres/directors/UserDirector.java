@@ -1,6 +1,9 @@
 package reqres.directors;
 
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import reqres.models.Register;
 
 import java.util.HashMap;
@@ -27,5 +30,17 @@ public class UserDirector extends Director{
         return buildJsonRequest(user);
     }
 
+    public static ResponseSpecification buildGetUserResponseSpec() {
+        ResponseSpecBuilder resSpecBuilder = new ResponseSpecBuilder();
+        resSpecBuilder.expectStatusCode(200);
+        resSpecBuilder.expectContentType(ContentType.JSON);
+        return resSpecBuilder.build();
+    }
 
+    public static ResponseSpecification buildGetUserResponseSpec(ResponseSpecification overwrites) {
+        ResponseSpecBuilder resSpecBuilder = new ResponseSpecBuilder();
+        resSpecBuilder.addResponseSpecification(overwrites);
+        resSpecBuilder.addResponseSpecification(buildGetUserResponseSpec());
+        return resSpecBuilder.build();
+    }
 }
