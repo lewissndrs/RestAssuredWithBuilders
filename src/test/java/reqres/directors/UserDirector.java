@@ -1,9 +1,6 @@
 package reqres.directors;
 
-import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
 import reqres.models.Register;
 
 import java.util.HashMap;
