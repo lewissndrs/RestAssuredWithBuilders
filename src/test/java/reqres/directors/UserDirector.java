@@ -10,8 +10,11 @@ import java.util.HashMap;
 
 public class UserDirector extends Director{
 
+//    Requests
+
+//    TODO can probably be overwritten using addRequestSpec, but will need to be tested to make sure merge behaviour is right.
     public static Register buildRegisterUser(HashMap<String,String> overwriteValues){
-        Register.RegisterBuilder register = Register.builder().email("lewis@email.com").password("Password01"); // default values
+        Register.RegisterBuilder register = Register.builder().email("eve.holt@reqres.in").password("Password01"); // default values
         if(overwriteValues != null){ // overwrite only what is necessary
             if(overwriteValues.containsKey("email")) {register.email(overwriteValues.get("email"));}
             if(overwriteValues.containsKey("password")) {register.password(overwriteValues.get("password"));}
@@ -30,17 +33,4 @@ public class UserDirector extends Director{
         return buildJsonRequest(user);
     }
 
-    public static ResponseSpecification buildGetUserResponseSpec() {
-        ResponseSpecBuilder resSpecBuilder = new ResponseSpecBuilder();
-        resSpecBuilder.expectStatusCode(200);
-        resSpecBuilder.expectContentType(ContentType.JSON);
-        return resSpecBuilder.build();
-    }
-
-    public static ResponseSpecification buildGetUserResponseSpec(ResponseSpecification overwrites) {
-        ResponseSpecBuilder resSpecBuilder = new ResponseSpecBuilder();
-        resSpecBuilder.addResponseSpecification(overwrites);
-        resSpecBuilder.addResponseSpecification(buildGetUserResponseSpec());
-        return resSpecBuilder.build();
-    }
 }

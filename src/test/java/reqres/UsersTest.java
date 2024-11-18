@@ -1,13 +1,13 @@
 package reqres;
 
-import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import reqres.directors.UserDirector;
+import reqres.models.RegisterErrorResponse;
+import reqres.models.RegisterResponse;
 import reqres.models.UsersResponse;
 
 import java.util.HashMap;
@@ -22,73 +22,66 @@ public class UsersTest {
         baseURI = "https://reqres.in/api";
     }
 
-    @Test
-    public void testGetUsers(){
-        given()
-                .when()
-                .get("/users")
-                .then()
-                .assertThat().statusCode(200)
-                .and().contentType(ContentType.JSON)
-                .and().body("data.size()",equalTo(6))
-                .and().body("per_page",equalTo(6))
-                .and().body("page",equalTo(1));
-    }
 
     @Test
-    public void testGetUsersWithOverwriteDataAndDeserialisation(){
-//        we can overwrite the default values by specifying only the data necessary for the test.
-//        Things like content type and response code don't need to be specced for every test
-        ResponseSpecBuilder resSpecBuilder = new ResponseSpecBuilder();
-        resSpecBuilder.expectBody("data.size()",equalTo(5));
-        resSpecBuilder.expectBody("per_page",equalTo(5));
-        resSpecBuilder.expectBody("page",equalTo(1));
-        ResponseSpecification resSpec = UserDirector.buildGetUserResponseSpec(resSpecBuilder.build());
+    public void testGetUsers(){
+//        Things like content type and response code can be assumed as default for most tests. We can use buildResponseSpec() to add the defaults for us.
+        ResponseSpecification resSpec = UserDirector.buildResponseSpec(new ResponseSpecBuilder()
+                .expectBody("data.size()",equalTo(5))
+                .expectBody("per_page",equalTo(5))
+                .expectBody("page",equalTo(2))
+                .build()
+        );
 
         given()
                 .param("per_page",5)
-                .expect()
-                .spec(resSpec)
+                .param("page",2)
                 .when()
                 .get("/users")
-                .as(UsersResponse.class);
-    }
-
-    @Test
-    public void testRegisterUserVerbose(){
-        RequestSpecBuilder requestBuilder = new RequestSpecBuilder();
-        requestBuilder.setAccept(ContentType.JSON);
-        requestBuilder.setContentType(ContentType.JSON);
-        requestBuilder.setBody(
-                "{" +
-                        "\"email\": \"eve.holt@reqres.in\", " +
-                        "\"password\": \"password01\""+
-                        "}"
-        );
-        RequestSpecification requestBody = requestBuilder.build();
-
-        given()
-                .when()
-                .spec(requestBody)
-                .post("/register")
                 .then()
-                .statusCode(200);
+                .spec(resSpec)
+                .extract()
+                .as(UsersResponse.class); //ensuring that the response serialises to the expected object.
     }
 
+
+
     @Test
-    public void testRegisterUserClean(){
+    public void testPostRegisterUser(){
 //        set up only the data necessary, if none is needed the overwrite values arg can be skipped.
-        HashMap<String,String> overwriteValues = new HashMap<>();
-        overwriteValues.put("email","eve.holt@reqres.in");
+        RequestSpecification requestBody = UserDirector.buildRegisterRequestSpec();
+//        same for expected response data. A standard 200 response and headers are expected so no overwrite data needed.
+        ResponseSpecification defaultResSpec = UserDirector.buildResponseSpec();
 
-//        boilerplate like setting contentType is abstracted to the Director class
-        RequestSpecification requestBody = UserDirector.buildRegisterRequestSpec(overwriteValues);
         given()
                 .when()
                 .spec(requestBody)
                 .post("/register")
                 .then()
-                .statusCode(200);
+                .spec(defaultResSpec)
+                .extract()
+                .as(RegisterResponse.class);
     }
+
+    @Test
+    public void testPostRegisterUserNegative(){
+        HashMap<String,String> overwriteValues = new HashMap<>();
+        overwriteValues.put("email","lewis@email.com");
+        RequestSpecification reqSpec = UserDirector.buildRegisterRequestSpec(overwriteValues);
+
+        ResponseSpecification resSpec = UserDirector.buildResponseSpec(new ResponseSpecBuilder()
+                .expectStatusCode(400)
+                .build());
+
+        given()
+                .when()
+                .spec(reqSpec)
+                .post("/register")
+                .then()
+                .spec(resSpec)
+                .extract()
+                .as(RegisterErrorResponse.class);
+    }
+
 
 }
