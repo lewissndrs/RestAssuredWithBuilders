@@ -11,6 +11,7 @@ import reqres.models.RegisterResponse;
 import reqres.models.UsersResponse;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
@@ -65,9 +66,10 @@ public class UsersTest {
 
     @Test
     public void testPostRegisterUserNegative(){
-        HashMap<String,String> overwriteValues = new HashMap<>();
-        overwriteValues.put("email","lewis@email.com");
-        RequestSpecification reqSpec = UserDirector.buildRegisterRequestSpec(overwriteValues);
+
+        RequestSpecification reqSpec = UserDirector.buildRegisterRequestSpec(new HashMap<>(Map.of(
+                "email","lewis@email.com"
+        )));
 
         ResponseSpecification resSpec = UserDirector.buildResponseSpec(new ResponseSpecBuilder()
                 .expectStatusCode(400)
