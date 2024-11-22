@@ -21,13 +21,13 @@ To achieve the above, we will implement builder patterns. Director patterns will
 
 ## Layers
 
-| Layer          | Description                                                                                                                                                                                |
-|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Test Runner    | Runner layer which will kick off tests across different files. In this case, the test running is handled by TestNG.                                                                        |
-| Test Layer     | class objects per endpoint. Tests are defined and calls to directors are made here. Requests and response calls are made here. Overwritten data needed for each test is also defined here. |
-| Director Layer | Will initialise the builder objects to put together the request with the "recipe" and then the .                                                                                           |
-| Builder Layer  | These objects create instances of the POJOs to build up the request and then serialise it. In this example, the builders are generated automatically by Lombok.                            |
-| Object Layer   | These can have default data, but I chose to define it in the Director Layer. The objects map to the structure of requests and responses.                                                   |
+| Layer          | Description                                                                                                                                                                                           |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Test Runner    | Runner layer which will kick off tests across different files. In this case, the test running is handled by TestNG.                                                                                   |
+| Test Layer     | Class objects per function. Tests are defined and calls to directors are made here. Requests and response calls are made here. Overwritten data needed for each test is also defined here.            |
+| Director Layer | Will initialise the builder objects to put together the request using a "recipe" and then pass it back up to the test layer.                                                                          |
+| Builder Layer  | These objects create instances of the POJOs to build up the request and then serialise it. In this example, the builders are generated automatically by Lombok and are a subclass of the model layer. |
+| Model Layer    | These can have default data, but I chose to define it in the Director Layer. The objects map to the structure of request and response bodies.                                                         |
 
 ## API under Test
 
